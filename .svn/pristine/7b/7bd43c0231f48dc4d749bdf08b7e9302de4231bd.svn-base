@@ -1,0 +1,24 @@
+package Characters;
+
+import java.awt.Graphics2D;
+
+public class Character {
+
+	private int posX, posY;
+	private SpriteSheet spriteSheet;
+
+	public Character(SpriteSheet sheet, int X, int Y) {
+		posX = X;
+		posY = Y;
+		spriteSheet = sheet;
+	}
+
+	public void render(Graphics2D g, int sw, int sh) {
+
+	}
+
+	public void update() {
+
+	}
+
+}

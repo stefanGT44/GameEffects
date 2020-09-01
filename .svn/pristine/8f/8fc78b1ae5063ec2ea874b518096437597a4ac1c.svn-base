@@ -1,0 +1,123 @@
+package Characters;
+
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+
+import app.Game;
+import app.Pseudo3D;
+import rafgfxlib.Util;
+import rafgfxlib.GameFrame.GFMouseButton;
+
+public class Tiles {
+
+	int x, y, size;
+	BufferedImage image;
+	int offsetX = 300, offsetY = 240;
+	float alpha = 0.2f;
+	float scale;
+	double mov = 0;
+	int i, j;
+	int width, height;
+
+	public Tiles(int i, int j) {// i - horizontalno j - vertikalno
+		this.i = i;
+		this.j = (4 - j) * 3;
+		x = i;
+		y = j;
+		image = Util.loadImage("/assets/tile.png");
+		size = 65;
+
+		x *= size;
+		y *= size;
+
+		x += offsetX;
+		y += offsetY;
+
+		Point2D p0;
+		Point2D p1;
+		Point2D p2;
+		Point2D p3;
+
+		int tmp = size;
+		if (i < 4) {// levo
+			double s = size * 1.8;
+			mov = (j) * (4 * 2 - i * 2 + 1);
+
+			double shift = (10 - i * 1.8) * 2;
+			p0 = new Point2D.Double(0 + shift, 0 + this.j);
+			p1 = new Point2D.Double(0 + s + shift, 0 + this.j);
+			p2 = new Point2D.Double(0 + s, 0 + s);
+			p3 = new Point2D.Double(0, 0 + s);
+			image = Pseudo3D.computeImage(image, p0, p1, p2, p3);
+
+			x = (int) (x - mov);
+		}
+
+		if (i == 4) {// centar
+			double s = size * 1.8;
+
+			p0 = new Point2D.Double(0 + 3, 0 + this.j);
+			p1 = new Point2D.Double(0 + s - 5, 0 + this.j);
+			p2 = new Point2D.Double(0 + s + 5, 0 + s);
+			p3 = new Point2D.Double(0 - 5, 0 + s);
+			image = Pseudo3D.computeImage(image, p0, p1, p2, p3);
+
+		}
+
+		if (i > 4) { // desno
+			i = i - 4;
+			double s = size * 1.8;
+			mov = (j) * (i * 2 + 1);
+
+			double shift = ((10 - 4 * 1.8) + i * 1.8) * 2;
+			p0 = new Point2D.Double(0 + shift, 0 + this.j);
+			p1 = new Point2D.Double(0 + s + shift, 0 + this.j);
+			p2 = new Point2D.Double(0 + s, 0 + s);
+			p3 = new Point2D.Double(0, 0 + s);
+			image = Pseudo3D.computeImage(image, p0, p1, p2, p3);
+
+			x = (int) (x + mov);
+			x += size - 5;
+		}
+		size = tmp;
+		this.j = j;
+
+		height = size;
+		if (this.i > 4)
+			width = -size;
+		if (this.i < 4)
+			width = size;
+		if (this.i == 4)
+			width = size + j;
+	}
+
+	public void render(Graphics2D g, int sw, int sh) {
+
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+
+		g.drawImage(image, x, y, width, height, null);
+
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+
+	}
+
+	public void update(int mouseX, int mouseY) {
+		if (i > 4) {
+			mouseX += size;
+		}
+
+		if (mouseX > x && mouseX < (x + size) && mouseY > y && mouseY < (y + size)) {
+			alpha = 1;
+		} else {
+			alpha = 0.2f;
+		}
+	}
+
+	public void handleMouseUp(int mouseX, int mouseY, GFMouseButton button) {
+		if (alpha == 1) {
+			Game.get().playScreen.player1.setCoordinates(x+(width/2), y+(height/2));
+		}
+	}
+}

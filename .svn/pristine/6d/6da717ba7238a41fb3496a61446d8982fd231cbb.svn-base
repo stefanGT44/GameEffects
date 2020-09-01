@@ -1,0 +1,35 @@
+package Characters;
+
+import app.Game;
+
+public class Sprite {
+
+	public final int SIZE;
+	public int x, y;
+	public int cx, cy;
+	
+	public static Sprite idle10 = new Sprite(101, 4, 0);
+	public static Sprite idle9 = new Sprite(101, 4, 1);
+	public static Sprite idle8 = new Sprite(101, 4, 2);
+	public static Sprite idle7 = new Sprite(101, 4, 3);
+	public static Sprite idle6 = new Sprite(101, 4, 4);
+	public static Sprite idle5 = new Sprite(101, 4, 5);
+	public static Sprite idle4 = new Sprite(101, 4, 6);
+	public static Sprite idle3 = new Sprite(101, 4, 7);
+	public static Sprite idle2 = new Sprite(101, 4, 8);
+	public static Sprite idle1 = new Sprite(101, 4, 9);
+	
+	public static Sprite idle11 = new Sprite(101, 3, 9);
+	public static Sprite idle12 = new Sprite(101, 3, 8);
+	public static Sprite idle13 = new Sprite(101, 3, 7);
+	public static Sprite idle14 = new Sprite(101, 3, 6);
+
+	public Sprite(int size, int x, int y){
+		SIZE = size;
+		this.x = x * size;
+		this.y = y * size;
+		this.cx = this.x + size;
+		this.cy = this.y + size;
+	}
+	
+}

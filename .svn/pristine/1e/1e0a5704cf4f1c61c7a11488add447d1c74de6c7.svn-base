@@ -1,0 +1,71 @@
+package Characters;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
+public class HealthBar {
+	
+	public static int pn = 0;
+
+	public int x, y;
+	public int width, height;
+	public int tempWidth;
+	BufferedImage image;
+	int tempHP = 100;
+	int HP = 100;
+	float r;
+	float g;
+	Color c;
+	Color black;
+	Player player;
+	
+	public HealthBar(int width, int height, Player player) {
+		this.width = width;
+		this.height = height;
+		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		r = 0;
+		g = 0;
+		if (pn == 0)
+			g = 1f;
+		else 
+			r = 1f;
+		c = new Color(r, g, 0f, 1f);
+		for (int i = 0; i < height; i++){
+			for (int j = 0; j < width; j++){
+				image.setRGB(j, i, c.getRGB());
+			}
+		}
+		pn++;
+		black = new Color(0f,0f,0f,1f);
+		this.player = player;
+	}
+	
+	public void render(Graphics2D g, int sw, int sh) {
+		g.drawImage(image, x, y, width, height, null);
+	}
+	
+	public void update(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+	
+	public void dealDmg(int dmg){
+		tempHP -= dmg;
+		if (tempHP<=0){
+			player.idle = false;
+			player.dead = true;
+		}
+		//100:tempHP = width:x?
+		tempWidth = (tempHP*width)/100;
+		for (int i = 0; i < height; i++){
+			for (int j = 0; j < width; j++){
+				if (j<=tempWidth)
+					image.setRGB(j, i, c.getRGB());
+				else
+					image.setRGB(j, i, black.getRGB());
+			}
+		}
+	}
+	
+}

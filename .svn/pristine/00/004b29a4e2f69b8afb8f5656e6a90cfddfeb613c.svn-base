@@ -1,0 +1,51 @@
+package Characters;
+
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
+import rafgfxlib.Util;
+
+public class Player {
+
+	public int x, y;
+	public Sprite sprite;
+	public int dir;
+	public boolean walking = false;
+	public int anim = 0;
+	public int speed = 5;
+	
+	public static BufferedImage sheet = Util.loadImage("/assets/f1_warblade.png");
+
+	public Player(int x, int y) {
+		this.x = x;
+		this.y = y;
+		sprite = sprite.idle1;
+	}
+
+	public void render(Graphics2D g, int sw, int sh) {
+		g.drawImage(sheet, x, y, x+sprite.SIZE, y+sprite.SIZE, sprite.x, sprite.y, sprite.cx, sprite.cy, null);
+	}
+
+	public void update() {
+		anim++;
+		switch (anim){
+		case 0: sprite = Sprite.idle1; break;
+		case 2: sprite = Sprite.idle2; break;
+		case 4: sprite = Sprite.idle3; break;
+		case 6: sprite = Sprite.idle4; break;
+		case 8: sprite = Sprite.idle5; break;
+		case 10: sprite = Sprite.idle6; break;
+		case 12: sprite = Sprite.idle7; break;
+		case 14: sprite = Sprite.idle8; break;
+		case 16: sprite = Sprite.idle9; break;
+		case 18: sprite = Sprite.idle10; break;
+		case 20: sprite = Sprite.idle11; break;
+		case 22: sprite = Sprite.idle12; break;
+		case 24: sprite = Sprite.idle13; break;
+		case 26: sprite = Sprite.idle14; break;
+		case 27: anim = 0; break;
+		}
+		
+	}
+
+}

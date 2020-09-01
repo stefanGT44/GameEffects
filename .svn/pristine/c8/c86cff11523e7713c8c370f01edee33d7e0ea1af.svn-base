@@ -1,0 +1,200 @@
+package Characters;
+
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import rafgfxlib.Util;
+
+public class Player {
+
+	public Tiles tile;
+	public int x, y, dX, dY;
+	float angle, speed = 5;
+	public Sprite sprite;
+	public int dir;
+	public BufferedImage sheet;
+	int width, height;
+
+	public int anim = 0;
+
+	public boolean attacking = false;
+	public ArrayList<Sprite> idleSprites;
+	int idlePos = 0;
+
+	public boolean idle = true;
+	public ArrayList<Sprite> attackSprites;
+	int attackPos = 0;
+
+	public boolean walking = false;
+	public ArrayList<Sprite> walkingSprites;
+	int walkingPos = 0;
+
+	public ArrayList<ArrayList<Sprite>> list;
+
+	public Player(int x, int y, String sheetPath, String descPath) {
+		this.x = x;
+		this.y = y;
+
+		idleSprites = new ArrayList<>();
+		attackSprites = new ArrayList<>();
+		walkingSprites = new ArrayList<>();
+
+		list = new ArrayList<>();
+		list.add(idleSprites);
+		list.add(attackSprites);
+		list.add(walkingSprites);
+
+		sheet = Util.loadImage(sheetPath);
+		loadSprites(descPath);
+		sprite = idleSprites.get(0);
+
+		width = sprite.SIZE;
+		height = sprite.SIZE;
+		dX = x;
+		dY = y;
+	}
+
+	public void render(Graphics2D g, int sw, int sh) {
+		g.drawImage(sheet, x, y, x + width, y + height, sprite.x, sprite.y, sprite.cx, sprite.cy, null);
+	}
+
+	public void update() {
+		anim++;
+		if (anim == 1000)
+			anim = 0;
+
+		if (idle) {
+			if (idlePos == idleSprites.size())
+				idlePos = 0;
+			if (anim % 2 == 0)
+				sprite = idleSprites.get(idlePos++);
+		}
+
+		if (attacking) {
+			if (attackPos == attackSprites.size()) {
+				attackPos = 0;
+				attacking = false;
+				idle = true;
+			}
+			if (anim % 2 == 0)
+				sprite = attackSprites.get(attackPos++);
+		}
+
+		if (walking) {
+			if (walkingPos == walkingSprites.size())
+				walkingPos = 0;
+			if (anim % 2 == 0)
+				sprite = walkingSprites.get(walkingPos++);
+		}
+
+		move();
+	}
+
+	public void loadSprites(String path) {
+		try {
+			Scanner s = new Scanner(new File(path));
+			int size = Integer.parseInt(s.nextLine());
+			int columnNum = Integer.parseInt(s.nextLine());
+			int i = 0;
+			while (s.hasNextLine()) {
+				String input[] = (s.nextLine()).split(";");
+				String start[] = (input[0]).split(",");
+				String end[] = (input[1].split(","));
+				int startOuter = Integer.parseInt(start[0]);
+				int endOuter = Integer.parseInt(end[0]);
+				int startInner = Integer.parseInt(start[1]);
+				int endInner = Integer.parseInt(end[1]);
+
+				while (startOuter >= endOuter) {
+
+					while (startInner >= 0) {
+						Sprite sprite = new Sprite(size, startOuter, startInner);
+						list.get(i).add(sprite);
+						if (startInner == endInner && startOuter == endOuter)
+							break;
+						startInner--;
+					}
+
+					startOuter--;
+					startInner = columnNum;
+
+				}
+				i++;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void setCoordinates(int x, int y) {
+		dX = x - (width / 2);
+		dY = (int) (y - (height / 1.5));
+
+		if (dX < this.x && width > 0) {
+			mirror();
+			this.x += sprite.SIZE;
+			dX += sprite.SIZE;
+			return;
+		}
+
+		if (dX > this.x && width < 0) {
+			mirror();
+			this.x -= sprite.SIZE;
+			dX -= sprite.SIZE;
+		}
+	}
+
+	public void atack(int x, int y) {
+		if (x < this.x && width > 0) {
+			mirror();
+			this.x += sprite.SIZE;
+			dX += sprite.SIZE;
+			return;
+		}
+
+		if (x > this.x && width < 0) {
+			mirror();
+			this.x -= sprite.SIZE;
+			dX -= sprite.SIZE;
+			return;
+		}
+	}
+
+	public void move() {
+		if (x == dX && y == dY) {
+			walking = false;
+			idle = true;
+			return;
+		}
+
+		double distance = Math.sqrt((x - dX) * (x - dX) + (y - dY) * (y - dY));
+		if (distance < 3) {
+			x = dX;
+			y = dY;
+			return;
+		}
+
+		float deltaX = dX - x;
+		float deltaY = dY - y;
+		angle = (float) Math.atan2(deltaY, deltaX);
+
+		x += speed * Math.cos(angle);
+		y += speed * Math.sin(angle);
+
+		walking = true;
+		idle = false;
+		attacking = false;
+	}
+
+	public void mirror() {
+		width = -width;
+	}
+
+	public void setTile(Tiles tile) {
+		this.tile = tile;
+	}
+
+}

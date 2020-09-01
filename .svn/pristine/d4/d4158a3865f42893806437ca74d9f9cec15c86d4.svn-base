@@ -1,0 +1,112 @@
+package menuScreens;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.GradientPaint;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
+import app.Game;
+import rafgfxlib.Util;
+
+public class Screen2 {
+	int width, height;
+
+	double Hscale;
+	double Wscale;
+
+	public BufferedImage background;
+	public BufferedImage midground;
+	public BufferedImage cliff;
+
+	public int Wmg;
+	public int Hmg;
+	public int mgX;
+	public int mgTX;
+
+	public int Wcliff;
+	public int Hcliff;
+	public int cliffX, cliffY;
+	public int cliffTX, cliffTY;
+
+	public BufferedImage fog;
+	public int Wfog;
+	public int Hfog;
+	public int fogX1, fogX2, fogX3;
+
+	public Screen2() {
+		width = Game.get().width;
+		height = Game.get().height;
+
+		background = Util.loadImage("/assets/background2.jpg");
+		Hscale = Game.get().height / (float) background.getHeight();
+		Wscale = Game.get().width / (float) background.getWidth();
+
+		midground = Util.loadImage("/assets/midground.png");
+		Wmg = (int) (midground.getWidth() * Wscale) + 20;
+		Hmg = (int) (midground.getHeight() * Hscale);
+		mgX = -10;
+
+		cliff = Util.loadImage("/assets/cliff2.png");
+		Wcliff = (int) (cliff.getWidth() * Wscale);
+		Hcliff = (int) (cliff.getHeight() * Hscale);
+		cliffX = width - Wcliff + 25;
+		cliffY = height - Hcliff + 25;
+
+		fog = Util.loadImage("/assets/fog.png");
+		Wfog = (int) (cliff.getWidth() * Wscale);
+		Hfog = (int) (cliff.getHeight() * Hscale) - 200;
+		fogX1 = 0;
+		fogX2 = Wfog;
+		fogX3 = Wfog * 2;
+	}
+
+	public void render(Graphics2D g, int sw, int sh) {
+		g.drawImage(background, 0, 0, width, height, null);
+
+		g.drawImage(midground, mgX - mgTX, 0, Wmg, Hmg, null);
+
+		g.drawImage(fog, fogX1, height - Hfog, Wfog, Hfog, null);
+		g.drawImage(fog, fogX2, height - Hfog, Wfog, Hfog, null);
+		g.drawImage(fog, fogX3, height - Hfog, Wfog, Hfog, null);
+
+		g.drawImage(cliff, cliffX - cliffTX, cliffY - cliffTY, Wcliff, Hcliff, null);
+	}
+
+	public void update(int mouseX, int mouseY) {
+		double delayX = Math.log(Math.abs(width / 2 - (mouseX - width / 2.0)));
+
+		double delayY = Math.log(Math.abs(height / 2 - (mouseY - height / 2.0)));
+
+		cliffTX = (int) ((mouseX - width / 2.0) * (5 + delayX) / (width / 2.0));
+		cliffTY = (int) ((mouseY - height / 2.0) * (5 + delayY) / (height / 2.0));
+
+		mgTX = (int) ((mouseX - width / 2.0) * delayX * 0.8 / (width / 1.8));
+
+		// menjamo midground da ima light beam
+		for (int i = 745; i < 800; i++) {
+			for (int j = 420; j < 600; j++) {
+				Color color = new Color(255, 255, 255);
+				int c = color.getRGB();
+
+				midground.setRGB(i, j, c);
+			}
+		}
+
+		if (fogX1 == -Wfog)
+			fogX1 = (2 * Wfog) - 1;
+		else
+			fogX1 -= 1;
+
+		if (fogX2 == -Wfog)
+			fogX2 = (2 * Wfog) - 1;
+		else
+			fogX2 -= 1;
+
+		if (fogX3 == -Wfog)
+			fogX3 = (2 * Wfog) - 1;
+		else
+			fogX3 -= 1;
+
+	}
+}

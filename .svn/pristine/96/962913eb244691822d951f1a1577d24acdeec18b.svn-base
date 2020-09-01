@@ -1,0 +1,85 @@
+package menuScreens;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
+import app.Game;
+import rafgfxlib.Util;
+
+public class Screen3 {
+	int width, height;
+	public BufferedImage background;
+	public BufferedImage pulse;
+	public BufferedImage mask;
+	
+	int pulseStart, pulseEnd;
+	
+	public ArrayList<HoverBlock> blocks;
+	
+	double hScale;
+	double wScale;
+
+	public Screen3() {
+		width = Game.get().width;
+		height = Game.get().height;
+
+		background = Util.loadImage("/assets/background3.png");
+		mask = Util.loadImage("/assets/background3MASK.png");
+		hScale = Game.get().height / (float) background.getHeight();
+		wScale = Game.get().width / (float) background.getWidth();
+		pulse = new BufferedImage(background.getWidth(), background.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		
+		blocks = new ArrayList<>();
+		blocks.add(new HoverBlock(1, 150, 30, 200, 0.05f, hScale, wScale, 1, 895, 1060));
+		blocks.add(new HoverBlock(1, 140, 30, 240, 0.05f, hScale, wScale, 1, 895, 1060));
+		blocks.add(new HoverBlock(2, 100, 30, 300, 0.03f, hScale, wScale, -1, 895, 1050));
+		blocks.add(new HoverBlock(3, 120, 30, 250, 0.02f, hScale, wScale, 1, 900, 1050));
+		blocks.add(new HoverBlock(4, 140, 30, 150, 0.04f, hScale, wScale, 1, 900, 1050));
+		blocks.add(new HoverBlock(5, 160, 30, 100, 0.05f, hScale, wScale, -1, 900, 1050));
+		blocks.add(new HoverBlock(6, 100, 30, 170, 0.03f, hScale, wScale, -1, 900, 1050));
+		blocks.add(new HoverBlock(2, 100, 30, 80, 0.03f, hScale, wScale, 1, 890, 1050));
+		blocks.add(new HoverBlock(5, 160, 30, 450, 0.02f, hScale, wScale, 1, 900, 1050));
+		blocks.add(new HoverBlock(2, 1250, 30, 320, 0.04f, hScale, wScale, -1, 895, 1050));
+		blocks.add(new HoverBlock(4, 140, 30, 70, 0.05f, hScale, wScale, 1, 900, 1050));
+		blocks.add(new HoverBlock(1, 100, 30, 120, 0.03f, hScale, wScale, 1, 885, 1060));
+		blocks.add(new HoverBlock(4, 120, 30, 70, 0.02f, hScale, wScale, 1, 900, 1050));
+		blocks.add(new HoverBlock(4, 130, 30, 190, 0.03f, hScale, wScale, 1, 900, 1050));
+		blocks.add(new HoverBlock(4, 150, 30, 360, 0.04f, hScale, wScale, 1, 900, 1050));
+		
+		pulseStart = 788;
+		pulseEnd = 784;
+	}
+
+	public void render(Graphics2D g, int sw, int sh) {
+		g.drawImage(background, 0, 0, width, height, null);
+		g.drawImage(pulse, 0, 0, width, height, null);
+		for (HoverBlock b:blocks){
+			b.render(g, sw, sh);
+		}
+	}
+
+	public void update(int mouseX, int mouseY) {
+		Color sColor, gColor;
+		for (int y = pulseStart; y > pulseEnd; y--){
+			for (int x = 1260; x < 1850; x++){
+				if (mask.getRGB(x, y) == -1){
+					sColor = new Color(background.getRGB(x, y));
+					pulse.setRGB(x, y, sColor.brighter().getRGB());
+				}
+			}
+		}
+		for (HoverBlock b:blocks){
+			b.update();
+		}
+		pulseStart -= 4;
+		pulseEnd -= 4;
+		if (pulseEnd<0){
+			pulseEnd = 784;
+			pulseStart = 788;
+		}
+	}
+
+}

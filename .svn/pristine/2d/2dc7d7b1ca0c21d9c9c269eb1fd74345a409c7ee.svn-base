@@ -1,0 +1,66 @@
+package Screens;
+
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
+import Characters.Player;
+import rafgfxlib.GameFrame.GFMouseButton;
+import rafgfxlib.Util;
+
+public class PlayScreen {
+
+	BufferedImage background;
+	BufferedImage midground;
+	BufferedImage midgroundPulse;
+	BufferedImage midgroundRiver;
+
+	Player player1 = new Player(500, 400);
+	
+	float position = 0.0f;
+	float speed = 0.02f;
+	boolean pulse = false;
+
+	public PlayScreen() {
+		background = Util.loadImage("/assets/Pbackground.jpg");
+		midground = Util.loadImage("/assets/Pmidground.png");
+		midgroundRiver = Util.loadImage("/assets/Pmidground_river.png");
+		midgroundPulse = Util.loadImage("/assets/Pmidground glow.png");
+
+	}
+
+	public void render(Graphics2D g, int sw, int sh) {
+
+		g.drawImage(background, 0, 0, sw, sh, null);
+		g.drawImage(midground, 0, 0, sw, sh, null);
+		g.drawImage(midgroundRiver, 0, 0, sw, sh, null);
+		
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, position));
+		g.drawImage(midgroundPulse, 0, 0, sw, sh, null);
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+		
+		player1.render(g, sw, sh);
+	}
+
+	public void update(int mouseX, int mouseY) {
+
+		if (pulse == false)
+			position += speed;
+		else
+			position -= speed;
+		if (position > 1) {
+			position = 1;
+			pulse = !pulse;
+		}
+
+		if (position < 0) {
+			position = 0;
+			pulse = !pulse;
+		}
+		player1.update();
+	}
+
+	public void handleMouseUp(int mouseX, int mouseY, GFMouseButton button) {
+
+	}
+}

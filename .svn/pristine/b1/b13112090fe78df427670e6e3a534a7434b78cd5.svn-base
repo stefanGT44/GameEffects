@@ -1,0 +1,211 @@
+package menuScreens;
+
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
+import app.Game;
+import rafgfxlib.Util;
+
+public class Screen2 {
+	int width, height;
+
+	double Hscale;
+	double Wscale;
+
+	public BufferedImage background;
+	public BufferedImage midground;
+	public BufferedImage cliff;
+
+	public int Wmg;
+	public int Hmg;
+	public int mgX;
+	public int mgTX;
+
+	public int Wcliff;
+	public int Hcliff;
+	public int cliffX, cliffY;
+	public int cliffTX, cliffTY;
+
+	public BufferedImage fog;
+	public int Wfog;
+	public int Hfog;
+	public int fogX1, fogX2, fogX3;
+
+	BufferedImage light;
+	public int lightX = 0;
+	public int lightTX;
+
+	public boolean beamDir1 = true;
+	public boolean beamDir2 = true;
+	public boolean beamDir3 = true;
+	public boolean beamDir4 = true;
+
+	public Screen2() {
+		width = Game.get().width;
+		height = Game.get().height;
+
+		background = Util.loadImage("/assets/background2.jpg");
+		Hscale = Game.get().height / (float) background.getHeight();
+		Wscale = Game.get().width / (float) background.getWidth();
+
+		midground = Util.loadImage("/assets/midground.png");
+		Wmg = (int) (midground.getWidth() * Wscale) + 20;
+		Hmg = (int) (midground.getHeight() * Hscale);
+		mgX = -10;
+
+		cliff = Util.loadImage("/assets/cliff2.png");
+		Wcliff = (int) (cliff.getWidth() * Wscale);
+		Hcliff = (int) (cliff.getHeight() * Hscale);
+		cliffX = width - Wcliff + 25;
+		cliffY = height - Hcliff + 25;
+
+		fog = Util.loadImage("/assets/fog.png");
+		Wfog = (int) (cliff.getWidth() * Wscale);
+		Hfog = (int) (cliff.getHeight() * Hscale) - 200;
+		fogX1 = 0;
+		fogX2 = Wfog;
+		fogX3 = Wfog * 2;
+
+		light = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		generateLightBeam(740, 450, 40);
+		generateLightBeam(615, 425, 40);
+		generateLightBeam(137, 370, 40);
+		generateLightBeam(675, 315, 40);
+	}
+
+	public void render(Graphics2D g, int sw, int sh) {
+		g.drawImage(background, 0, 0, width, height, null);
+
+		g.drawImage(midground, mgX - mgTX, 0, Wmg, Hmg, null);
+
+		g.drawImage(fog, fogX1, height - Hfog, Wfog, Hfog, null);
+		g.drawImage(fog, fogX2, height - Hfog, Wfog, Hfog, null);
+		g.drawImage(fog, fogX3, height - Hfog, Wfog, Hfog, null);
+
+		g.drawImage(cliff, cliffX - cliffTX, cliffY - cliffTY, Wcliff, Hcliff, null);
+
+		g.drawImage(light, lightX - lightTX, 0, width, height, null);
+	}
+
+	public void update(int mouseX, int mouseY) {
+		double delayX = Math.log(Math.abs(width / 2 - (mouseX - width / 2.0)));
+
+		double delayY = Math.log(Math.abs(height / 2 - (mouseY - height / 2.0)));
+
+		cliffTX = (int) ((mouseX - width / 2.0) * (5 + delayX) / (width / 2.0));
+		cliffTY = (int) ((mouseY - height / 2.0) * (5 + delayY) / (height / 2.0));
+
+		mgTX = (int) ((mouseX - width / 2.0) * delayX * 0.8 / (width / 1.8));
+
+		lightTX = (int) ((mouseX - width / 2.0) * delayX * 0.8 / (width / 1.8));
+
+		if (fogX1 == -Wfog)
+			fogX1 = (2 * Wfog) - 1;
+		else
+			fogX1 -= 1;
+
+		if (fogX2 == -Wfog)
+			fogX2 = (2 * Wfog) - 1;
+		else
+			fogX2 -= 1;
+
+		if (fogX3 == -Wfog)
+			fogX3 = (2 * Wfog) - 1;
+		else
+			fogX3 -= 1;
+
+		beamDir1 = lightBeamAnimation(740, 450, 40, beamDir1);
+		beamDir2 = lightBeamAnimation(615, 425, 40, beamDir2);
+		beamDir2 = lightBeamAnimation(137, 370, 40, beamDir2);
+		beamDir2 = lightBeamAnimation(675, 315, 40, beamDir2);
+
+	}
+
+	public void generateLightBeam(float X, float Y, float width) {
+
+		float center = X;
+		float alpha = 0;
+		float dMax = width / 2f;
+		float r = 128f / 255f, g = 0f, b = 255f / 255f;
+
+		float Ycenter = Y;
+		float YdMax = Y * 4;
+
+		for (int x = (int) (center - width / 2); x < center + width / 2; x++) {
+			for (int y = 0; y < Y; y++) {
+				float delta = Math.abs((float) x - center);
+				float Ydelta = Math.abs((float) y - Ycenter);
+				float alpha1 = 1f - (delta / dMax);
+				float alpha2 = (Ydelta / YdMax);
+				alpha = (alpha1 + alpha2) / 2.0f;
+				Color col = new Color(r, g, b, alpha);
+				light.setRGB(x, y, col.getRGB());
+			}
+		}
+		r = 1;
+		g = 1;
+		b = 1;
+		width /= 10;
+		dMax = width / 2f;
+		for (int x = (int) (center - width / 2); x < center + width / 2; x++) {
+			for (int y = 0; y < Y; y++) {
+				float delta = Math.abs((float) x - center);
+				float Ydelta = Math.abs((float) y - Ycenter);
+				float alpha1 = 1f - (delta / dMax);
+				float alpha2 = (Ydelta / YdMax);
+				alpha = (alpha1 + alpha2) / 2.0f;
+				Color col = new Color(r, g, b, alpha);
+				light.setRGB(x, y, col.getRGB());
+			}
+		}
+
+	}
+
+	public boolean lightBeamAnimation(float X, float Y, float width, boolean beamDir) {
+		float center = X;
+		float alpha;
+		float dMax = width / 2f;
+
+		float Ycenter = Y;
+		float YdMax = Y * 4;
+
+		width /= 10;
+		dMax = width / 2f;
+
+		for (int x = (int) (center - width / 2); x < center + width / 2; x++) {
+			for (int y = 0; y < Y; y++) {
+				int color = light.getRGB(x, y);
+				alpha = (color >> 24) & 0xff;
+				Color old = new Color(light.getRGB(x, y));
+				if (beamDir)
+					alpha = alpha / 1.4f;
+				else
+					alpha = alpha * 1.4f;
+
+				if (alpha > 255)
+					alpha = 255;
+				if (alpha < 0)
+					alpha = 0;
+				Color col = new Color(old.getRed() / 255f, old.getGreen() / 255f, old.getBlue() / 255f, alpha / 255f);
+				light.setRGB(x, y, col.getRGB());
+			}
+		}
+		int x = (int) center;
+		int y = (int) (Y - 1);
+		float delta = Math.abs((float) x - center);
+		float Ydelta = Math.abs((float) y - Ycenter);
+		float alpha1 = 1f - (delta / dMax);
+		float alpha2 = (Ydelta / YdMax);
+		float alphaMax = (alpha1 + alpha2) / 2.0f;
+
+		int color = light.getRGB(x, y);
+		alpha = (color >> 24) & 0xff;
+
+		if (alpha >= alphaMax || alpha <= 0.1f)
+			beamDir = !beamDir;
+
+		return beamDir;
+	}
+}

@@ -1,0 +1,82 @@
+package Characters;
+
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import rafgfxlib.Util;
+
+public class Player {
+
+	public int x, y;
+	public Sprite sprite;
+	public int dir;
+	public BufferedImage sheet;
+	
+	public boolean walking = false;
+	public boolean attacking = true;
+	
+	public int anim = 0;
+	
+	public ArrayList<Sprite> attackSprites;
+	int attackPos = 0;
+
+	public Player(int x, int y, String sheetPath, String descPath) {
+		this.x = x;
+		this.y = y;
+		attackSprites = new ArrayList<>();
+		sheet = Util.loadImage(sheetPath);
+		loadSprites(descPath);
+		sprite = attackSprites.get(0);
+	}
+
+	public void render(Graphics2D g, int sw, int sh) {
+		g.drawImage(sheet, x, y, x+sprite.SIZE, y+sprite.SIZE, sprite.x, sprite.y, sprite.cx, sprite.cy, null);
+	}
+
+	public void update() {
+		anim++;
+		if (anim == 1000) anim = 0;
+		
+		if (attacking){
+			if (attackPos==attackSprites.size()) attackPos = 0;
+			if (anim%2==0) sprite = attackSprites.get(attackPos++);
+		}
+		
+	}
+	
+	public void loadSprites(String path){
+		try {
+		Scanner s = new Scanner(new File(path));
+		int size = Integer.parseInt(s.nextLine());
+		int columnNum = Integer.parseInt(s.nextLine());
+		while (s.hasNextLine()){
+			String input[] = (s.nextLine()).split(";");
+			String start[] = (input[0]).split(",");
+			String end[] = (input[1].split(","));
+			int startOuter = Integer.parseInt(start[0]);
+			int endOuter = Integer.parseInt(end[0]);
+			int startInner = Integer.parseInt(start[1]);
+			int endInner = Integer.parseInt(start[1]);
+			
+			while (startOuter>=endOuter){
+				
+				while (startInner>=0){
+					Sprite sprite = new Sprite(size, startOuter, startInner);
+					attackSprites.add(sprite);
+					startInner--;
+				}
+				
+				startOuter--;
+				startInner = columnNum;
+				
+			}
+		}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+}

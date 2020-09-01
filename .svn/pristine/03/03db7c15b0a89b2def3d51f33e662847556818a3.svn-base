@@ -1,0 +1,93 @@
+package menuScreens;
+
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
+import app.Game;
+import rafgfxlib.Util;
+
+public class Screen3 {
+	int width, height;
+	public BufferedImage background;
+	public BufferedImage fl1, fl2, fl3, fl4, fl5, fl6;
+	
+	public ArrayList<HoverBlock> blocks;
+
+	float x1, y1;
+	float radiusX, radiusY;
+	float theta;
+	int locX = 975, locY = 200;
+	float scaleY;
+	float scaleX;
+	
+	double hScale;
+	double wScale;
+
+	public Screen3() {
+		width = Game.get().width;
+		height = Game.get().height;
+
+		background = Util.loadImage("/assets/background3.png");
+		hScale = Game.get().height / (float) background.getHeight();
+		wScale = Game.get().width / (float) background.getWidth();
+		
+		blocks = new ArrayList<>();
+		blocks.add(new HoverBlock(1, 150, 30, 100, 0.05f, hScale, wScale));
+		blocks.add(new HoverBlock(2, 150, 30, 400, 0.05f, hScale, wScale));
+		
+		//blocks.add(new HoverBlock(2, 150, 30, 200, 0.05f, hScale, wScale));
+
+		/*fl1 = Util.loadImage("/assets/fl1.png");
+
+		x1 = 0;
+		y1 = 0;
+
+		radiusX = 150;
+		radiusY = 40;
+		theta = 0;
+		*/
+	}
+
+	public void render(Graphics2D g, int sw, int sh) {
+		g.drawImage(background, 0, 0, width, height, null);
+		for (HoverBlock b:blocks){
+			b.render(g, sw, sh);
+		}
+		/*AffineTransform transform = new AffineTransform();
+		transform.setToIdentity();
+		transform.scale(wScale, hScale);
+		transform.scale(scaleY, scaleY);
+		//bez ili sa?
+		transform.scale(scaleX, scaleX);
+		//bez ili sa?
+		g.translate((int) x1, (int) y1);
+		if (!(y1<locY && x1>900 && x1 < 1060))
+		g.drawImage(fl1, transform, null);
+		*/
+	}
+
+	public void update(int mouseX, int mouseY) {
+		for (HoverBlock b:blocks){
+			b.update();
+		}
+		/*float speed = 0.05f;
+		scaleY = y1 / (float) locY;
+		if (scaleY > 1)
+			scaleY = 1;
+		speed *= scaleY;
+		
+		if (y1 > locY) {
+			scaleX = x1 / (float) locX;
+			if (scaleX > 1)
+				scaleX = 2 - scaleX;
+			speed *= scaleX;
+		}
+		theta += speed;
+		x1 = locX + (float) (radiusX * Math.cos(theta));
+		y1 = locY + (float) (radiusY * Math.sin(theta));
+		*/
+	}
+
+}

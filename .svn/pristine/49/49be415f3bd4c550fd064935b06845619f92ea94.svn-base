@@ -1,0 +1,50 @@
+package menuScreens;
+
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
+
+import app.Game;
+import rafgfxlib.Util;
+
+public class Screen3 {
+	int width, height;
+	public BufferedImage background;
+	public BufferedImage fl1, fl2, fl3, fl4, fl5, fl6;
+	
+	int x1, y1;
+	
+	double Hscale;
+	double Wscale;
+	
+	public Screen3() {
+		width = Game.get().width;
+		height = Game.get().height;
+
+		background = Util.loadImage("/assets/background3.png");
+		Hscale = Game.get().height / (float) background.getHeight();
+		Wscale = Game.get().width / (float) background.getWidth();
+		
+		try {
+		//fl1 = ImageIO.read(new File("/assets/fl1.png"));
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		
+		x1 = 800;
+		y1 = 400;
+		
+	}
+	
+	public void render(Graphics2D g, int sw, int sh) {
+		g.drawImage(background, 0, 0, width, height, null);
+		//g.drawImage(fl1, x1, y1, (int)(fl1.getWidth()*Wscale), (int)(fl1.getHeight()*Hscale), null);
+	}
+	
+	public void update(int mouseX, int mouseY) {
+		
+	}
+
+}

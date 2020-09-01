@@ -1,0 +1,40 @@
+package Characters;
+
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
+import rafgfxlib.Util;
+
+public class Tiles {
+
+	int x, y, size;
+	BufferedImage image;
+	int offsetX = 300, offsetY= 250;
+	float alpha = 0.3f;
+
+	public Tiles(int x, int y) {
+		this.x = x;
+		this.y = y;
+		image = Util.loadImage("/assets/tile.png");
+		size = 65;
+		
+		this.x *= size;
+		this.y *= size;
+		
+		this.x += offsetX;
+		this.y += offsetY;
+	}
+	
+	public void render(Graphics2D g, int sw, int sh) {
+		
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+		g.drawImage(image, x, y, size, size, null);
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+		
+	}
+	
+	public void update(int mouseX, int mouseY) {
+		
+	}
+}

@@ -1,0 +1,84 @@
+package menuScreens;
+
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+
+import rafgfxlib.Util;
+
+public class HoverBlock {
+	
+	public static BufferedImage fl1 = Util.loadImage("/assets/fl1.png");
+	public static BufferedImage fl2 = Util.loadImage("/assets/fl2.png");
+	public static BufferedImage fl3 = Util.loadImage("/assets/fl3.png");
+	public static BufferedImage fl4 = Util.loadImage("/assets/fl4.png");
+	public static BufferedImage fl5 = Util.loadImage("/assets/fl5.png");
+	public static BufferedImage fl6 = Util.loadImage("/assets/fl6.png");
+	
+	int imageID;
+	float x1, y1;
+	float radiusX, radiusY;
+	float theta;
+	int locX = 975, locY;
+	float scaleY;
+	float scaleX;
+	float speed;
+	public BufferedImage img;
+	
+	double hScale;
+	double wScale;
+	
+	int pillarX1 = 900, pillarX2 = 1060;
+	
+	public HoverBlock(int imageID, float radiusX, float radiusY, int locY, float speed, double Hscale, double Wscale) {
+		this.imageID = imageID;
+		this.radiusX = radiusX;
+		this.radiusY = radiusY;
+		this.locY = locY;
+		this.speed = speed;
+		this.hScale = Hscale;
+		this.wScale = Wscale;
+		if (imageID == 1) img = fl1;
+		if (imageID == 2) img = fl2;
+		if (imageID == 3) img = fl3;
+		if (imageID == 4) img = fl4;
+		if (imageID == 5) img = fl5;
+		if (imageID == 6) img = fl6;
+		x1 = 0;
+		y1 = 0;
+		theta = 0;
+	}
+	
+	public void render(Graphics2D g, int sw, int sh) {
+		AffineTransform transform = new AffineTransform();
+		transform.setToIdentity();
+		transform.scale(wScale, hScale);
+		transform.scale(scaleY, scaleY);
+		//bez ili sa?
+		transform.scale(scaleX, scaleX);
+		//bez ili sa?
+		g.translate((int) x1, (int) y1);
+		if (!(y1<locY && x1>pillarX1 && x1 < pillarX2)){
+			g.drawImage(img, transform, null);
+		}
+	}
+	
+	public void update() {
+		float tempSpeed = speed;
+		scaleY = y1 / (float) locY;
+		if (scaleY > 1)
+			scaleY = 1;
+		tempSpeed *= scaleY;
+		
+		if (y1 > locY) {
+			scaleX = x1 / (float) locX;
+			if (scaleX > 1)
+				scaleX = 2 - scaleX;
+			tempSpeed *= scaleX;
+		}
+		theta += tempSpeed;
+		x1 = locX + (float) (radiusX * Math.cos(theta));
+		y1 = locY + (float) (radiusY * Math.sin(theta));
+	}
+
+}

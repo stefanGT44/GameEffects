@@ -1,0 +1,75 @@
+package menuScreens;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
+
+import app.Game;
+import rafgfxlib.Util;
+
+public class EscScreen {
+
+	int width, height;
+	BufferedImage backgroundSave;
+	BufferedImage background;
+	boolean down = false;
+	int screen = 0;
+
+	int counter = 1;
+	int rgb[] = new int[3];
+	WritableRaster source;
+	float X,Y;
+
+	public EscScreen() {
+		Game.get();
+		width = Game.width;
+		height = Game.height;
+	}
+
+	public void render(Graphics2D g, int sw, int sh) {
+		g.drawImage(background, 0, 0, width, height, null);
+	}
+
+	public void update(int mouseX, int mouseY, boolean escDown) {
+		if (!escDown) {
+			if (down) {
+				down = false;
+				Game.get().screenNumber = screen;
+			}
+		} else
+			down = true;
+
+		if (counter < 5) {
+			counter++;
+			blur(counter);
+		}
+
+	}
+
+	public void setBackground(BufferedImage background, int scNum) {
+		counter = 0;
+		this.background = background;
+		backgroundSave = background;
+		screen = scNum;
+	}
+
+	public void blur(int radius) {
+		source = backgroundSave.getRaster();
+
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+
+				X = (float) (Math.random() - 0.5) * radius * 2.0f;
+				Y = (float) (Math.random() - 0.5) * radius * 2.0f;
+
+				Util.bilSample(source, x + X, y + Y, rgb);
+
+				Color col = new Color(rgb[0] / 255f, rgb[1] / 255f, rgb[2] / 255f);
+				background.setRGB(x, y, col.getRGB());
+			}
+		}
+	}
+
+}

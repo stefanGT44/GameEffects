@@ -1,0 +1,108 @@
+package Screens;
+
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
+import Characters.Player;
+import Characters.Tiles;
+import rafgfxlib.GameFrame.GFMouseButton;
+import rafgfxlib.Util;
+
+public class PlayScreen {
+
+	BufferedImage background;
+	BufferedImage midground;
+	BufferedImage midgroundPulse;
+	BufferedImage midgroundRiver;
+
+	public Tiles[][] tiles = new Tiles[9][5];
+
+	// putanja opisa mora da ima src ispred
+	public Player player1 = new Player(264, 334, "/assets/f2_eternitypainter.png", "src/assets/f2_eternitypainter_desc.txt",
+			"/assets/eternityImpact.png");
+	public Player player2 = new Player(816, 334, "/assets/boss_solfist.png", "src/assets/boss_solfist_desc.txt", "/assets/testImpact.png");
+
+	float position = 0.0f;
+	float speed = 0.02f;
+	boolean pulse = false;
+
+	public PlayScreen() {
+		background = Util.loadImage("/assets/Pbackground.jpg");
+		midground = Util.loadImage("/assets/Pmidground.png");
+		midgroundRiver = Util.loadImage("/assets/Pmidground_river.png");
+		midgroundPulse = Util.loadImage("/assets/Pmidground glow.png");
+
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 5; j++) {
+				tiles[i][j] = new Tiles(i, j);
+			}
+		}
+		player1.setTile(tiles[0][2]);
+		player2.setTile(tiles[8][2]);
+		tiles[8][2].setPaintedTile(true);
+	}
+
+	public void render(Graphics2D g, int sw, int sh) {
+
+		g.drawImage(background, 0, 0, sw, sh, null);
+		g.drawImage(midground, 0, 0, sw, sh, null);
+		g.drawImage(midgroundRiver, 0, 0, sw, sh, null);
+
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, position));
+		g.drawImage(midgroundPulse, 0, 0, sw, sh, null);
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 5; j++) {
+				tiles[i][j].render(g, sw, sh);
+			}
+		}
+
+		player1.render(g, sw, sh);
+		player2.render(g, sw, sh);
+		if (player1.attacking)
+			if (player2.tile.I > 4)
+				player1.renderImpact(g, sw, sh, tiles[player2.tile.I-1][player2.tile.J]);
+			else
+				player1.renderImpact(g, sw, sh, player2.tile);
+		if (player2.attacking)
+			if (player1.tile.I > 4)
+				player2.renderImpact(g, sw, sh, tiles[player1.tile.I-1][player1.tile.J]);
+			else
+				player2.renderImpact(g, sw, sh, player1.tile);
+	}
+
+	public void update(int mouseX, int mouseY) {
+		
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 5; j++) {
+				tiles[i][j].update(mouseX, mouseY);
+			}
+		}
+
+		if (pulse == false)
+			position += speed;
+		else
+			position -= speed;
+		if (position > 1) {
+			position = 1;
+			pulse = !pulse;
+		}
+
+		if (position < 0) {
+			position = 0;
+			pulse = !pulse;
+		}
+		player1.update();
+		player2.update();
+	}
+
+	public void handleMouseUp(int mouseX, int mouseY, GFMouseButton button) {
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 5; j++) {
+				tiles[i][j].handleMouseUp(mouseX, mouseY, button);
+			}
+		}
+	}
+}

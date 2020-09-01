@@ -1,0 +1,23 @@
+package Characters;
+
+import java.awt.Graphics2D;
+
+public class Character {
+
+	private int posX, posY;
+	Sprite sprite;
+
+	public Character(int X, int Y) {
+		posX = X;
+		posY = Y;
+	}
+
+	public void render(Graphics2D g, int sw, int sh) {
+		
+	}
+
+	public void update() {
+
+	}
+
+}

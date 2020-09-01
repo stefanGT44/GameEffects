@@ -1,0 +1,105 @@
+package app;
+
+import java.awt.Graphics2D;
+
+import menuScreens.Screen1;
+import menuScreens.Screen2;
+import rafgfxlib.GameFrame;
+
+public class Game extends GameFrame {
+	public static int width = 1200;
+	public static int height = 800;
+	int screenNumber = 1;
+
+	public Screen1 screen1;
+	public Screen2 screen2;
+
+	public static Game instance;
+
+	public static Game get() {
+		if (instance == null)
+			new Game();
+		return instance;
+	}
+
+	public Game() {
+		super("Racunarska Grafika", width, height);
+		instance = this;
+		setHighQuality(true);
+
+		// screens
+		screen1 = new Screen1();
+		screen2 = new Screen2();
+
+		startThread();
+	}
+
+	@Override
+	public void render(Graphics2D g, int sw, int sh) {
+
+		if (screenNumber == 1)
+			screen1.render(g, sw, sh);
+
+		if (screenNumber == 2)
+			screen2.render(g, sw, sh);
+
+	}
+
+	@Override
+	public void update() {
+		if (screenNumber == 1)
+			screen1.update(getMouseX(), getMouseY());
+		if (screenNumber == 2)
+			screen2.update(getMouseX(), getMouseY());
+
+	}
+
+	@Override
+	public void handleWindowInit() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void handleWindowDestroy() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void handleMouseDown(int x, int y, GFMouseButton button) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void handleMouseUp(int x, int y, GFMouseButton button) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void handleMouseMove(int x, int y) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void handleKeyDown(int keyCode) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void handleKeyUp(int keyCode) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public static void main(String[] args) {
+		GameFrame gf = new Game();
+		gf.initGameWindow();
+
+	}
+
+}

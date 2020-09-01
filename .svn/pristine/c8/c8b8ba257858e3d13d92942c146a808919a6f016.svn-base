@@ -1,0 +1,32 @@
+package Screens;
+
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
+import rafgfxlib.GameFrame.GFMouseButton;
+
+public class PlayScreen {
+
+	BufferedImage background;
+	BufferedImage midground;
+	BufferedImage midgroundPuls;
+	
+	
+	
+	public PlayScreen() {
+		
+	}
+
+	public void render(Graphics2D g, int sw, int sh) {
+
+	}
+
+	public void update(int mouseX, int mouseY) {
+
+	}
+	
+	
+	public void handleMouseUp(int mouseX, int mouseY, GFMouseButton button) {
+		
+	}
+}

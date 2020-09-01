@@ -1,0 +1,60 @@
+package Menu;
+
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
+import rafgfxlib.Util;
+
+public class MenuLayer {
+
+	BufferedImage play;
+	BufferedImage playGlow;
+	BufferedImage connect;
+	BufferedImage connectGlow;
+	BufferedImage options;
+	BufferedImage optionsGlow;
+	BufferedImage quit;
+	BufferedImage quitGlow;
+	
+	Button playButton;
+	Button connectButton;
+	Button optionsButton;
+	Button quitButton;
+	
+	
+	public MenuLayer() {
+		play = Util.loadImage("/assets/play.png");
+		playGlow = Util.loadImage("/assets/play1.png");
+		connect = Util.loadImage("/assets/connect.png");
+		connectGlow = Util.loadImage("/assets/connect1.png");
+		options = Util.loadImage("/assets/options.png");
+		optionsGlow = Util.loadImage("/assets/options1.png");
+		quit = Util.loadImage("/assets/quit.png");
+		quitGlow = Util.loadImage("/assets/quit1.png");
+		
+		int offsetH = 10;
+		playButton = new Button(play, playGlow, 210, 202+offsetH);
+		connectButton = new Button(connect, connectGlow, 200, 250+offsetH);
+		optionsButton = new Button(options, optionsGlow, 187, 300+offsetH);
+		quitButton = new Button(quit, quitGlow, 202, 355+offsetH);
+		
+	}
+
+	public void render(Graphics2D g, int sw, int sh) {
+		
+		playButton.render(g, sw, sh);
+		connectButton.render(g, sw, sh);
+		optionsButton.render(g, sw, sh);
+		quitButton.render(g, sw, sh);
+			
+	}
+
+	public void update(int mouseX, int mouseY) {
+
+		playButton.update(mouseX, mouseY);
+		connectButton.update(mouseX, mouseY);
+		optionsButton.update(mouseX, mouseY);
+		quitButton.update(mouseX, mouseY);
+	}
+
+}

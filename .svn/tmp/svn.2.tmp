@@ -1,0 +1,47 @@
+package menuScreens;
+
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
+import app.Game;
+import rafgfxlib.Util;
+
+public class Screen3 {
+	int width, height;
+	public BufferedImage background;
+	
+	public ArrayList<HoverBlock> blocks;
+	
+	double hScale;
+	double wScale;
+
+	public Screen3() {
+		width = Game.get().width;
+		height = Game.get().height;
+
+		background = Util.loadImage("/assets/background3.png");
+		hScale = Game.get().height / (float) background.getHeight();
+		wScale = Game.get().width / (float) background.getWidth();
+		
+		blocks = new ArrayList<>();
+		blocks.add(new HoverBlock(1, 150, 30, 200, 0.05f, hScale, wScale));
+		blocks.add(new HoverBlock(2, 100, 30, 300, 0.03f, hScale, wScale));
+	
+	}
+
+	public void render(Graphics2D g, int sw, int sh) {
+		g.drawImage(background, 0, 0, width, height, null);
+		for (HoverBlock b:blocks){
+			b.render(g, sw, sh);
+		}
+	}
+
+	public void update(int mouseX, int mouseY) {
+		for (HoverBlock b:blocks){
+			b.update();
+		}
+	}
+
+}

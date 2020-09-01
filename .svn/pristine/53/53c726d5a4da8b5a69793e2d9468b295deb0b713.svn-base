@@ -1,0 +1,47 @@
+package Menu;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+
+public class Button {
+
+	String text;
+	int x, y, recW, recH, size;
+	Color color, colorSave;
+	Font font;
+
+	public Button(String text, int x, int y, int recW, int recH, int size, Color color) {
+		super();
+		this.text = text;
+		this.x = x;
+		this.y = y;
+		this.recW = recW;
+		this.recH = recH;
+		this.size = size;
+		this.color = color;
+		colorSave = color;
+		
+
+		font = new Font("Arial", Font.BOLD, size);
+	}
+
+	public void render(Graphics2D g, int sw, int sh) {
+
+		g.setColor(color);
+		g.setFont(font);
+		g.drawString(text, x, y);
+	}
+
+	public void update(int mouseX, int mouseY) {
+		if (mouseX > x && mouseX < (x + recW) && mouseY > y && mouseY < (y + recH)) // hover_over_button
+		{
+			color = Color.white;
+		}
+		else
+		{
+			color = colorSave;
+		}
+	}
+
+}
