@@ -18,3 +18,13 @@ A 2D game for showcasing some simple graphics effects and techniques, developed 
 ![Alt text](images/screen3.png?raw=true "Menu screen 3")
 ![Alt text](images/screen4.png?raw=true "Game screen")
 ![Alt text](images/screen5.png?raw=true "Game screen")
+
+
+## Sidenote
+This project was an assignment as part of the course - Computer graphics during the 5th semester at the Faculty of Computer Science in Belgrade.
+
+## Download
+You can download the .jar file [here](downloads/GameEffects.zip).<br>
+
+## Contributors
+- Stefan Ginic - <stefangwars@gmail.com>
