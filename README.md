@@ -8,7 +8,7 @@ A 2D game showcasing some simple graphics effects and techniques, developed from
 * Particle effects
 * Linear interpolation for gradients (health bar)
 * Eliptical trajectory with alpha and size scaling to mimic 3d rotation
-* Image looping (infinite looping)
+* Image looping (infinite scrolling of an image)
 * Sprite animations
 * Scrolling battle text (damage)
 * Layer masks
