@@ -2,7 +2,7 @@
 Various graphics effects in a simple game.
 
 ## Overview
-A 2D game for showcasing some simple graphics effects and techniques, developed from scratch, with very basic gameplay.
+A 2D game showcasing some simple graphics effects and techniques, developed from scratch, with very basic gameplay.
 
 #### Some of the used techniques:
 * Particle effects
