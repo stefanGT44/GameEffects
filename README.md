@@ -4,7 +4,7 @@ Various graphics effects in a simple game.
 ## Overview
 A 2D game showcasing some simple graphics effects and techniques, developed from scratch, with very basic gameplay.
 
-#### Some of the used techniques:
+#### Some of the techniques being used:
 * Particle effects
 * Linear interpolation for gradients (health bar)
 * Eliptical trajectory with alpha and size scaling to mimic 3d rotation
